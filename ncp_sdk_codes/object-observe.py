@@ -2,12 +2,16 @@ import boto3
 from datetime import datetime
 import json
 import os
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
 
 service_name = 's3'
 endpoint_url = 'https://kr.object.ncloudstorage.com'
 region_name = 'kr-standard'
-access_key = 'ncp_iam_BPAMKR47Y5KhVyITRlr0'
-secret_key = 'ncp_iam_BPKMKR4qFrz7AucMedAGT9TbBNGjWCbAUx'
+access_key = os.getenv('NCP_ACCESS_KEY')
+secret_key = os.getenv('NCP_SECRET_KEY')
 
 def get_structure(s3, bucket_name, prefix=''):
     """재귀적으로 객체 구조를 딕셔너리 형태로 생성"""
@@ -35,7 +39,7 @@ def get_structure(s3, bucket_name, prefix=''):
     # 파일 처리
     for content in response.get('Contents', []):
         key = content['Key']
-        # prefix 자체는 건너뛰기
+        # prefix 자체 건너뛰기
         if key == prefix:
             continue
         # prefix로 시작하는 파일만 처리
@@ -96,8 +100,8 @@ if __name__ == "__main__":
             aws_secret_access_key=secret_key
         )
 
-        bucket_name = 'migration-test-2024-aination'
-        root_prefix = 'Migration Test/'
+        bucket_name = os.getenv('NCP_BUCKET_NAME')
+        root_prefix = ''  # 빈 문자열로 설정하여 최상위 폴더부터 분석
 
         print("Analyzing storage structure...")
         structure = get_structure(s3, bucket_name, root_prefix)
