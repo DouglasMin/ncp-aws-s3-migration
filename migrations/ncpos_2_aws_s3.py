@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# 환경변수에서 키 값들을 가져옴
+ncp_access_key = os.getenv('NCP_ACCESS_KEY')
+ncp_secret_key = os.getenv('NCP_SECRET_KEY')
 aws_access_key = os.getenv('AWS_ACCESS_KEY')
 aws_secret_key = os.getenv('AWS_SECRET_KEY')
 
@@ -21,8 +24,8 @@ class MigrationHandler:
         """NCP와 AWS 클라이언트 설정"""
         self.ncp_client = boto3.client(
             's3',
-            aws_access_key_id="ncp_iam_BPAMKR47Y5KhVyITRlr0",
-            aws_secret_access_key="ncp_iam_BPKMKR4qFrz7AucMedAGT9TbBNGjWCbAUx",
+            aws_access_key_id=ncp_access_key,
+            aws_secret_access_key=ncp_secret_key,
             endpoint_url='https://kr.object.ncloudstorage.com',
             config=Config(signature_version='s3v4')
         )
